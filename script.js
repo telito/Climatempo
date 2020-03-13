@@ -25,7 +25,6 @@ function iniciamodal(cidade, estado, ibge, populacao, obser = "") {
     document.querySelector('#populacao').innerHTML = `População estimada: ${populacao}`
 
 
-    //testando api, backup a baixo
         replac = cidade.replace(" ", "%20")
         var req = new XMLHttpRequest();
       
@@ -39,19 +38,49 @@ function iniciamodal(cidade, estado, ibge, populacao, obser = "") {
             requi = JSON.parse(requi)
             console.log(requi)
             console.log(requi.list[5].weather[0]);
-            console.log(requi.list[5].weather[0]['main']);
-            tempo = requi.list[5].weather[0]['description']
-            tempmin = requi.list[1].main.temp_min
-            tempmax = requi.list[1].main.temp_max
-            total   = requi.list[1].main
-            console.log(tempmin)
-            console.log(tempmax)
+            console.log(requi.list[5].weather[0]['description']);
 
-            document.querySelector('#tempe_max').innerHTML = `A temperatura maxima de ${cidade} é: ${tempmax}`
+            //Enviando dados para o modal
+            for(i = 0; i <= 28; i +=7){
+            tempo = requi.list[i].weather[0]['description']
+            tempmin = requi.list[i].main.temp_min
+            tempmax = requi.list[i].main.temp_max
+            dia  = requi.list[i].dt_txt[8] + requi.list[i].dt_txt[9] + "/" + requi.list[i].dt_txt[5] + requi.list[i].dt_txt[6]
+               
+            
+                if(i == 0){
+                    document.querySelector('#dia').innerHTML += `<div class="col col-5" onclick="alteramodal('${tempo}','${tempmin}','${tempmax}','${dia}')">
+                                                            <div class="card">
+                                                                <div id="Dia">
+                                                                    ${dia}
+                                                                </div>
+                                                            </div>
+                                                        </div>`
+
+                }
+                else{
+
+                    document.querySelector('#dia').innerHTML += `<div class="col col-5 col-e" onclick="alteramodal('${tempo}','${tempmin}','${tempmax}','${dia}')">
+                                                            <div class="card">
+                                                                <div id="Dia">
+                                                                ${dia}
+                                                                </div>
+                                                            </div>
+                                                        </div>`
+
+                }
+            
+            }
 
         }
        
 
+}
+//função Para alterar o modal com informações especificas do tempo
+function alteramodal(tempo,tempomin,tempomax,dia){
+    document.querySelector('#ibge').innerHTML = `Minima: ${tempomin}c<br> Maxíma: ${tempomax}c `
+    document.querySelector('#populacao').innerHTML = `Tempo: ${tempo}`
+    document.querySelector('#obser').innerHTML = `Dia: ${dia}`
 }
 
 //Recebendo dados da localstore para o content e passando para o modal, aproveitando para chamar a API e editar os dados
@@ -109,6 +138,8 @@ function altera(dado,lin){
 function fechamodal() {
     const modal = document.querySelector("#modal-previsao");
     modal.classList.remove('mostrar')
+
+    document.querySelector('#dia').innerHTML = ""
 }
 
 //Enviando dados para o localStorage
