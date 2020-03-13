@@ -41,14 +41,18 @@ function iniciamodal(cidade, estado, ibge, populacao, obser = "") {
             console.log(requi.list[5].weather[0]['description']);
 
             //Enviando dados para o modal
-            for(i = 0; i <= 28; i +=7){
+
+            
+            for(i = 0; i <= 29; i +=7){
             tempo = requi.list[i].weather[0]['description']
             tempmin = requi.list[i].main.temp_min
             tempmax = requi.list[i].main.temp_max
             dia  = requi.list[i].dt_txt[8] + requi.list[i].dt_txt[9] + "/" + requi.list[i].dt_txt[5] + requi.list[i].dt_txt[6]
                
+           
             
                 if(i == 0){
+                    i = 1
                     document.querySelector('#dia').innerHTML += `<div class="col col-5" onclick="alteramodal('${tempo}','${tempmin}','${tempmax}','${dia}')">
                                                             <div class="card">
                                                                 <div id="Dia">
@@ -56,6 +60,8 @@ function iniciamodal(cidade, estado, ibge, populacao, obser = "") {
                                                                 </div>
                                                             </div>
                                                         </div>`
+                   
+                                                        
 
                 }
                 else{
@@ -67,7 +73,8 @@ function iniciamodal(cidade, estado, ibge, populacao, obser = "") {
                                                                 </div>
                                                             </div>
                                                         </div>`
-
+                    
+                     
                 }
             
             }
@@ -81,6 +88,20 @@ function alteramodal(tempo,tempomin,tempomax,dia){
     document.querySelector('#ibge').innerHTML = `Minima: ${tempomin}c<br> Maxíma: ${tempomax}c `
     document.querySelector('#populacao').innerHTML = `Tempo: ${tempo}`
     document.querySelector('#obser').innerHTML = `Dia: ${dia}`
+
+    if(tempo == "nublado"){
+        document.querySelector('#modalimg').src= "./img/nublado.jpg"
+    }
+    else if(tempo == "céu limpo"){
+        document.querySelector('#modalimg').src= "./img/limpo.jpg"
+    }
+    else if( tempo == "chuva leve"){
+        document.querySelector('#modalimg').src= "./img/chuva.jpg"
+    }
+    else{
+        document.querySelector('#modalimg').src= "./img/dispersas.jpg"
+    }
+
 }
 
 //Recebendo dados da localstore para o content e passando para o modal, aproveitando para chamar a API e editar os dados
@@ -93,7 +114,7 @@ function recebeDados() {
 
     for (var k in local) {
         item = localStorage.getItem(k)
-        grau = ""
+        
         item = JSON.parse(item)
         
         
@@ -102,9 +123,9 @@ function recebeDados() {
         content = document.querySelector('#content')
         content.innerHTML += `<div class="col col-5"  onclick="iniciamodal('${k}','${item[0]}','${item[1]}','${item[2]}','${item[3]}')">
                                 <div class="card">
-                                    <img src="./img/chuva.jpg" alt="Chovendo">
+                                    <img id="img${mudado}" src="" alt="Chovendo">
                                     <p>${k}</p>
-                                    <p class="tempe" id="${mudado}">${grau} c</p>
+                                    <p class="tempe" id="${mudado}"></p>
             
                                 </div>
                               </div>`
@@ -130,6 +151,23 @@ function altera(dado,lin){
             console.log(dado)
             document.querySelector(`#${dado}`).innerHTML = atual
             console.log(requi)
+            tempo = requi.list[0].weather[0]['description']
+
+
+            //Testando qual imagem deve aparecer.
+            if(tempo == "nublado"){
+                document.querySelector(`#img${dado}`).src= "./img/nublado.jpg"
+            }
+            else if(tempo == "céu limpo"){
+                document.querySelector(`#img${dado}`).src= "./img/limpo.jpg"
+            }
+            else if( tempo == "chuva leve"){
+                document.querySelector(`#img${dado}`).src= "./img/chuva.jpg"
+            }
+            else{
+                document.querySelector(`#img${dado}`).src= "./img/dispersas.jpg"
+            }
+        
                           }
 }
 
