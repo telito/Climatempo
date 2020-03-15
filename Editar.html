@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adicionar cidade</title>
+    <title>Editar cidade</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body onload="editarCidade()">
 
     <div class="container-fluid">
         <div class="header">
@@ -29,9 +29,17 @@
 
     <div class="container">
         <div class="input-container">
-            <div class="row" style="margin-top: 20px;">
-                <input type="text" class="input" placeholder="cidade" id="cidade" required>
+            <div class="row" id="listar" >
+
             </div>
+
+           <br>
+
+           <div class="row" id="selecionada">
+
+           </div>
+
+           <input type="text" class="input" style="display:none" id="cidade" required>
             <div class="row">
                 <input type="text" class="input" placeholder="estado" id="estado" required>
             </div>
@@ -45,7 +53,7 @@
                 <input type="text" class="input" placeholder="observação" id="obser" required>
             </div>
             <div class="row">
-                <button id="envia" class="btn" onclick="Adiciona()">Enviar</button>
+                <button id="envia" class="btn" onclick="edita()">Editar cidade</button>
             </div>
         </div>
     </div>

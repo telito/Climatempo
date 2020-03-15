@@ -371,6 +371,20 @@ input {
     font-size:1.2em;
 
 }
+.deletar{
+    position: absolute;
+    top:-30px;
+    left: -30px;
+    width: 100px;
+    height: 50px;
+    border-radius: 20%;
+    border: 4px solid white;
+    background-color:#DC3545;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 4px rgba(0,0,0,.3);
+    font-size:1.2em;
+}
 
 .modal p{
 font-size: large;
@@ -400,7 +414,13 @@ color: #1E90FF;;
     }
 }
 
-/* Apresentação detalhada do clima */
+/* Pagina Editar cidade*/
+
+#cidadeSelecionada{
+    text-align: center;
+    color: #1E90FF;
+    font-size: 1.2em;
+}
 
 
 
