@@ -206,6 +206,14 @@
     
     }
 }
+@media(min-width:1575px){
+    .tempe{
+    margin-top: -7% !important;
+    
+    }
+}
+
+
 
 /*Responsividade das imagens*/
 img,
