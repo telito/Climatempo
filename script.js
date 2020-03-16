@@ -10,14 +10,34 @@ function iniciamodal(cidade, estado, ibge, populacao, obser = "") {
     const modal = document.querySelector("#modal-previsao");
     modal.classList.add('mostrar')
     ob = document.querySelector('#obser')
-
-    if (obser == "" || obser == " " || obser == null) {
+    popula = document.querySelector('#populacao')
+    ibg = document.querySelector('#ibge')
+    //TESTA CAMPO OBSERVAÇÃO
+    if (obser == "" || obser == " " ) {
         ob.style = "display: none"
     }
 
     else {
         ob.style = "display: block";
         ob.innerHTML = `Observações: ${obser}`
+    }
+    //TESTA CAMPO POPULAÇÃO
+    if (populacao == "" || populacao == " " ) {
+        popula.style = "display: none"
+    }
+
+    else {
+        popula.style = "display: block";
+        popula.innerHTML = `Observações: ${populacao}`
+    }
+    //TESTA CAMPO IBGE
+    if (ibge == "" || ibge == " " ) {
+        ibg.style = "display: none"
+    }
+
+    else {
+        ibg.style = "display: block";
+        ibg.innerHTML = `Observações: ${ibge}`
     }
 
     document.querySelector("#cidade").innerHTML = `${cidade}, ${estado}`;
@@ -39,15 +59,17 @@ function iniciamodal(cidade, estado, ibge, populacao, obser = "") {
 
         requi = this.responseText
         requi = JSON.parse(requi)
+        //verificando se existe alguma cidade cadastrada
 
+        
 
         //Enviando dados para o modal
+        
 
-
-        for (i = 0; i <= 29; i += 7) {
-            tempo = requi.list[i].weather[0]['description']
-            tempmin = requi.list[i].main.temp_min
-            tempmax = requi.list[i].main.temp_max
+        for (i = 0; i <= 36; i += 8) {
+            
+            tempmin = Math.round(requi.list[i].main.temp_min)
+            tempmax = Math.round(requi.list[i].main.temp_max)
             dia = requi.list[i].dt_txt[8] + requi.list[i].dt_txt[9] + "/" + requi.list[i].dt_txt[5] + requi.list[i].dt_txt[6]
 
             //enviando imagem inicial do modal
@@ -75,7 +97,7 @@ function iniciamodal(cidade, estado, ibge, populacao, obser = "") {
                                                             </div>
                                                         </div>`
 
-
+                tempo = requi.list[i-1].weather[0]['description']
 
             }
             else {
@@ -100,10 +122,13 @@ function iniciamodal(cidade, estado, ibge, populacao, obser = "") {
 //função Para alterar o modal com informações especificas do tempo
 function alteramodal(tempo, tempomin, tempomax, dia) {
     document.querySelector('#ibge').innerHTML = `Minima: ${tempomin}c<br> Maxíma: ${tempomax}c `
+    document.querySelector('#ibge').style.display = 'block'
     document.querySelector('#populacao').innerHTML = `Tempo: ${tempo}`
+    document.querySelector('#populacao').style.display = 'block'
     document.querySelector('#obser').innerHTML = `Dia: ${dia}`
+    document.querySelector('#obser').style.display = 'block'
 
-    if (tempo == "nublado") {
+    if (tempo  == "nublado") {
         document.querySelector('#modalimg').src = "./img/nublado.jpg"
     }
     else if (tempo == "céu limpo") {
@@ -122,33 +147,59 @@ function alteramodal(tempo, tempomin, tempomax, dia) {
 
 function recebeDados() {
     local = localStorage
-    local = JSON.stringify(local)
-    local = JSON.parse(local)
-
-
-    for (var k in local) {
-        item = localStorage.getItem(k)
-
-        item = JSON.parse(item)
-
-
-        mudado = k.replace(" ", "")
-        link = k.replace(" ", "%20")
+    if(local.length == 0){
+        
         content = document.querySelector('#content')
-        content.innerHTML += `<div class="col col-5"  onclick="iniciamodal('${k}','${item[0]}','${item[1]}','${item[2]}','${item[3]}')">
-                                <div class="card">
-                                    <img id="img${mudado}" src="" alt="Chovendo">
-                                    <p>${k}</p>
-                                    <p class="tempe" id="${mudado}"></p>
-                                    
-            
-                                </div>
-                              </div>`
-        altera(mudado, link, item[0])
+        content.innerHTML = `
+        <div class="row" style="text-align:left;margin-top:40px" id="cidadeSelecionada">Parece que você não possui nenhuma cidade cadastrada, podemos adicionar algumas de exemplo para você?</div>
+        <div class="row">
+         <button class="btn" onclick="addCidadespadrao()">Adicionar Cidades</button>
+         <a href="AddCidade.html"><button class="btn">Não, Adicionar manualmente</button></a>
+        
+        </div> `
+
+        
+
     }
+    else{
+        local = JSON.stringify(local)
+        local = JSON.parse(local)
+
+        for (var k in local) {
+            item = localStorage.getItem(k)
+
+            item = JSON.parse(item)
+
+
+            mudado = k.replace(" ", "")
+            link = k.replace(" ", "%20")
+            content = document.querySelector('#content')
+            content.innerHTML += `<div class="col col-5"  onclick="iniciamodal('${k}','${item[0]}','${item[1]}','${item[2]}','${item[3]}')">
+                                    <div class="card">
+                                        <img id="img${mudado}" src="" alt="Chovendo">
+                                        <p>${k}</p>
+                                        <p class="tempe" id="${mudado}"></p>
+                                        
+                
+                                    </div>
+                                </div>`
+            altera(mudado, link, item[0])
+    }}
 }
 
+function addCidadespadrao(){
+    localStorage.setItem('RIO GRANDE', '["RS", "4315602", "197.228", ""]')
+    localStorage.setItem('PELOTAS', '["RS", "4314407", "342.405", "Cidade do doce"]')
+    localStorage.setItem('BAGÉ', '["RS", "4301602", "121.143", ""]')
+    localStorage.setItem('NATAL', '["RN", "2408102", "884.122", ""]')
+    localStorage.setItem('FLORIANÓPOLIS', '["SC", "4205407", "500.973", ""]')
+    localStorage.setItem('BRASÍLIA', '["DF", "5300108", "3.015.268", ""]')
+    localStorage.setItem('BAURU', '["SP", "3506003", "376.818", ""]')
 
+    window.location.reload()
+
+
+}
 
 // A função altera, envia os dados da api e imagens para o content da primeira pagina 
 function altera(dado, lin, estado) {
